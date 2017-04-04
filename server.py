@@ -1,16 +1,50 @@
+#!/usr/bin/env python
 from flask import *
+import os
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = "./upload"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham"
 
+def allowed_file(filename): # check if current file is allowed or not
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route("/")
 def getIndex():
-    return send_from_directory("www","index.html")
+    return send_from_directory("www", "index.html")
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+# To upload file from raspberry pi use following code
+# with open('test1.jpg', 'rb') as f : r = requests.post("http://localhost:2121/upimage", files={'file' : f})
+
+
+@app.route('/upimage', methods=['POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            # return redirect('upload.html')
+            return abort(404)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            # return redirect('upload.html')
+            return abort(404)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # return redirect(url_for('uploaded_file', filename=filename))
+            return "success"
 
 @app.route("/<path:path>")
 def getFiles(path):
@@ -21,36 +55,11 @@ def checkLogin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username=="shubham" and password=="singh":
+        if username == "shubham" and password == "singh":
             return "Successfully Logged IN"
         else:
             return "Wrong Credentials"
 
-@app.route("/upimage",methods=['POST', 'GET'])
-def uploadImage():
-    if request.method == "POST":
-        if 'file' not in request.files:
-            flash('No File Part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash("No selected file")
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            return redirect(url_for('uploaded_file', filename=filename))
-        return '''
-        <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-        '''
-    else:
-        return "upimage url called"
 
 if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+    app.run(port=2121, debug=True)
