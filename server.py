@@ -69,7 +69,7 @@ def checkLogin():
         username = request.form['username']
         password = request.form['password']
         if username == "shubham" and password == "singh":
-            return send_from_directory("www", "home.html")
+            return send_from_directory("./", "home.html")
         else:
             return "Wrong Credentials"
 
