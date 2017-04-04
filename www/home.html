@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"  ng-app="home">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+    <!-- Angular Components -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
+    <title>HOME</title>
+    <script src="home.js"></script>
+    <style>
+        .imgRow{
+            margin: 1em;
+            padding: 1em;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div ng-controller="HomeCtrl">
+        <div class="container">
+            <div class="row">
+                <h2>Images</h2>
+            </div>
+            <div class="row imgRow" ng-repeat="sublist in imageList">
+                <div class="col-sm-3 col-md-3 col-xs-12" ng-repeat="image in sublist">
+                    <img src="{{image}}" class="img-responsive img-rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

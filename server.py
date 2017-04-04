@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from flask import *
 import os
+import json
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "./upload"
@@ -46,6 +47,18 @@ def upload_file():
             # return redirect(url_for('uploaded_file', filename=filename))
             return "success"
 
+@app.route("/get-images")
+def getImages():
+    imageList = os.listdir(UPLOAD_FOLDER)
+    for indexNo in range(len(imageList)):
+        imageList[indexNo] = "/uploads/"+imageList[indexNo]
+    tmpList = []
+    while len(imageList) > 0:
+        tmpList.append(imageList[:4])
+        imageList = imageList[4:]
+    imageList = tmpList
+    return make_response(json.dumps(imageList))
+
 @app.route("/<path:path>")
 def getFiles(path):
     return send_from_directory("www", path)
@@ -56,7 +69,7 @@ def checkLogin():
         username = request.form['username']
         password = request.form['password']
         if username == "shubham" and password == "singh":
-            return "Successfully Logged IN"
+            return send_from_directory("www", "home.html")
         else:
             return "Wrong Credentials"
 
