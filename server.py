@@ -75,4 +75,5 @@ def checkLogin():
 
 
 if __name__ == "__main__":
-    app.run(port=2121, debug=True)
+	PORTNO = int(os.environ.get("PORT", 2121))
+    app.run(host='0.0.0.0', port=PORTNO)
