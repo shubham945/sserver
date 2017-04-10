@@ -4,7 +4,7 @@ import os
 import json
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = "./upload"
+UPLOAD_FOLDER = "upload"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)

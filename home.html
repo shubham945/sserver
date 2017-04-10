@@ -9,6 +9,7 @@
     <!-- Angular Components -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
     <title>HOME</title>
+	<link rel="stylesheet" type="text/css" href="backcss.css">
     <script src="home.js"></script>
     <style>
         .imgRow{
@@ -21,9 +22,29 @@
 <body>
     <div ng-controller="HomeCtrl">
         <div class="container">
-            <div class="row">
+		<header class="page-header">
+  <ul class="nav nav-pills pull-right">
+  <li class="active"><a href="#">HOME</a></li>
+  <li><a href="#">CONTACT</a></li>
+  <li><a href="#">COMPONENT</a></li>
+  <li><a href="about.html">ABOUT</a></li>
+  
+  
+  
+  
+  </ul>
+  
+  <h1 ><span class="glyphicon glyphicon-lamp" aria-hidden="true"></span>Security</h1>
+  </header>
+    <div class="jumbotron">
+  <h1>Capture image from secureRoom</h1>
+  <p><span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>Without permission no one can enter in the room otherwise your image will be transfer to the admin mobile and you treated as the thief</p>
+  <a href="www.google.com" class="btn btn-success">Download image</a>
+  </div>
+            
+			<!--<div class="row">
                 <h2>Images</h2>
-            </div>
+            </div>!-->
             <div class="row imgRow" ng-repeat="sublist in imageList">
                 <div class="col-sm-3 col-md-3 col-xs-12" ng-repeat="image in sublist">
                     <img src="{{image}}" class="img-responsive img-rounded">
