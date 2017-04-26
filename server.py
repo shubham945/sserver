@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 from flask import *
+from flask_cors import CORS
 import os
 import json
 from werkzeug.utils import secure_filename
+import dbcon
 
 UPLOAD_FOLDER = "upload"
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
+CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = "shubham"
+
+API_SESSION = {}
+TOKEN_ID = None
 
 def allowed_file(filename): # check if current file is allowed or not
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -65,15 +73,24 @@ def getFiles(path):
 
 @app.route("/login", methods=['POST'])
 def checkLogin():
+    global TOKEN_ID
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+	json_obj = request.get_json()
         if username == "shubham" and password == "singh":
             return send_from_directory("./", "home.html")
         else:
+	    username = json_obj['username']
+	    password = json_obj['password']
+	    TOKEN_ID = json_obj['tokenID']
+	    if username == 'shubham' and password == 'singh':
+	        return send_from_directory("./", "home.html")
             return "Wrong Credentials"
 
 
 if __name__ == "__main__":
     PORTNO = int(os.environ.get("PORT", 2121))
+    app = dbcon.inject_db(app)
+    app.app_context().push()
     app.run(host='0.0.0.0', port=PORTNO)
